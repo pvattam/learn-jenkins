@@ -1,15 +1,17 @@
 pipeline {
-    agent { node {label 'workstation'} }
-
+    agent any
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-                script{
-                    withAWSParameterStore(credentialsId: 'AWS', naming: 'absolute', path: '/dev', recursive: true, regionName: 'us-east-1') {
-                      sh 'env'
-                    }
+        stage('Example') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "admin"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
                 }
+            }
+            steps {
+                echo "Hello, ${PERSON}, nice to meet you."
             }
         }
     }
